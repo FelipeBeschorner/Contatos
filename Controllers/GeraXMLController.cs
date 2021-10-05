@@ -1,4 +1,5 @@
 ﻿using contato;
+using Contato.Business;
 using ContatosApplication;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,30 +15,19 @@ namespace Contato.Models
 
     public class GeraXMLController : ControllerBase
     {
-        AddressBook AddressBook = Program.AddressBook;
+        ContatoBusiness ContatoBusiness = new ContatoBusiness();
 
         [HttpGet]
         public IActionResult getXml()
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(AddressBook));
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
-            FileStream fileStream = new FileStream("teste.xml", FileMode.Create);
-            serializer.Serialize( fileStream, AddressBook, ns);
-            fileStream.Close();
-
-            return Ok("XML gerado com Sucesso!");
+            return Ok(ContatoBusiness.getXml());
         }
 
         [HttpGet]
         [Route("Download")]
         public IActionResult downloadXml()
         {
-            getXml();
-            FileStream arquivo = new FileStream("teste.xml", FileMode.Open);
-            FileStreamResult download = new FileStreamResult(arquivo, "application/xml");
-            download.FileDownloadName = "teste.xml";
-            return download;
+            return ContatoBusiness.downloadXml();
         }
     }
 }

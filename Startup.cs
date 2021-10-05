@@ -1,4 +1,7 @@
+using Contato.Config;
+using Contato.DTO;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +12,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
 
 namespace contato
 {
@@ -39,6 +45,17 @@ namespace contato
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseExceptionHandler(appError =>
+            {
+                appError.Run(async context =>
+                {
+                    var result = context.Features.Get<ExceptionResponse>();
+                    //var result = new ExceptionResponse();
+                    //result.statusCode = (HttpStatusCode)context.Response.StatusCode;
+                    //context.Response.StatusCode = (int)result.statusCode;
+                });
+            });
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -61,7 +78,6 @@ namespace contato
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.RoutePrefix = string.Empty;
             });
-
 
         }
     }

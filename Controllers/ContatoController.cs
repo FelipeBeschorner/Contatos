@@ -1,4 +1,6 @@
-﻿using ContatosApplication;
+﻿using Contato.Business;
+using Contato.Config;
+using ContatosApplication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,21 +14,18 @@ namespace contato.Controllers
     [Route("API/[controller]")]
     public class ContatoController : ControllerBase
     {
-        AddressBook AddressBook = Program.AddressBook;
+        ContatoBusiness ContatoBusiness = new ContatoBusiness();
 
         [HttpGet]
         public IActionResult GetContatos()
         {
-            return Ok(AddressBook);
+            return Ok(ContatoBusiness.GetContatos());
         }
 
         [HttpPost]
         public IActionResult criarContato(string nome, int numero) {
             try {
-                if (string.IsNullOrEmpty(nome) || nome.Length < 3) return BadRequest("Informe um nome válido");
-                Contact contatoAtivo = AddressBook.contacts.Find(r => r.Phone.phonenumber == numero.ToString());
-                if (contatoAtivo != null) return BadRequest("Número já cadastrado.");
-                else return Ok(AddressBook.contacts.Append(new Contact(nome, numero.ToString())));
+                return Ok(ContatoBusiness.criarContato(nome, numero));
             }
             catch (Exception e)
             {
@@ -39,13 +38,18 @@ namespace contato.Controllers
         public IActionResult getContato(int numero)
         {
             try {
-                Contact contatoAtivo = AddressBook.contacts.Find(r => r.Phone.phonenumber == numero.ToString());
-                if (contatoAtivo == null) return NotFound("Número não cadastrado.");
-                else return Ok(contatoAtivo);
+                return Ok(ContatoBusiness.getContato(numero));
             }
-            catch (Exception e)
+            catch (InternalException e)
             {
-                return BadRequest("Ocorreu algum erro durante a Execução.");
+                //return BadRequest("Ocorreu algum erro durante a Execução. asdasd");
+                switch (e.HttpStatus)
+                {
+                    case System.Net.HttpStatusCode.NotFound : return NotFound(e);
+                        break;
+                    default : return BadRequest("Ocorreu algum erro duarante a Execução.");
+                }
+                //return e.HttpStatus(e.Message) //BadRequest(e);
             }
         }
 
@@ -54,9 +58,7 @@ namespace contato.Controllers
         {
             try
             {
-                if (string.IsNullOrEmpty(novoNome) || novoNome.Length < 3) return BadRequest("Informe um nome válido");
-                if (AddressBook.contacts.Exists(r => r.Phone.phonenumber == numero.ToString())) return Ok(AddressBook.contacts.Find(r => r.Phone.phonenumber == numero.ToString()).FirstName = novoNome);
-                else return NotFound("Número não cadastrado.");
+                return Ok(ContatoBusiness.editarContato(numero, novoNome));
             }
             catch (Exception e)
             {
@@ -68,8 +70,7 @@ namespace contato.Controllers
         public IActionResult deletarContato(int numero)
         {
             try {
-                if (AddressBook.contacts.Remove(AddressBook.contacts.Find(r => r.Phone.phonenumber == numero.ToString()))) return Ok("Numero excluido!");
-                else return NotFound("Número não cadastrado");
+                return Ok(ContatoBusiness.deletarContato(numero));
             }
             catch(Exception e)
             {

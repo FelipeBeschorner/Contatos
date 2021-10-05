@@ -25,3 +25,7 @@ C:\Users\felipe.beschorner\source\repos\contato\contato\obj\Debug\netcoreapp3.1\
 C:\Users\felipe.beschorner\source\repos\contato\contato\obj\Debug\netcoreapp3.1\contato.dll
 C:\Users\felipe.beschorner\source\repos\contato\contato\obj\Debug\netcoreapp3.1\contato.pdb
 C:\Users\felipe.beschorner\source\repos\contato\contato\obj\Debug\netcoreapp3.1\contato.genruntimeconfig.cache
+C:\Users\felipe.beschorner\source\repos\contato\contato\bin\Debug\netcoreapp3.1\System.Net.Http.Formatting.dll
+C:\Users\felipe.beschorner\source\repos\contato\contato\bin\Debug\netcoreapp3.1\System.Web.Http.dll
+C:\Users\felipe.beschorner\source\repos\contato\contato\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\felipe.beschorner\source\repos\contato\contato\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
