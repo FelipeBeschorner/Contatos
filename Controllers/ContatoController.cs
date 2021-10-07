@@ -24,58 +24,26 @@ namespace contato.Controllers
 
         [HttpPost]
         public IActionResult criarContato(string nome, int numero) {
-            try {
-                return Ok(ContatoBusiness.criarContato(nome, numero));
-            }
-            catch (Exception e)
-            {
-                return BadRequest("Ocorreu algum erro duarante a Execução.");
-            }
+            return Ok(ContatoBusiness.criarContato(nome, numero));
         }
 
         [HttpGet]
         [Route("{numero}")]
         public IActionResult getContato(int numero)
         {
-            try {
-                return Ok(ContatoBusiness.getContato(numero));
-            }
-            catch (InternalException e)
-            {
-                //return BadRequest("Ocorreu algum erro durante a Execução. asdasd");
-                switch (e.HttpStatus)
-                {
-                    case System.Net.HttpStatusCode.NotFound : return NotFound(e);
-                        break;
-                    default : return BadRequest("Ocorreu algum erro duarante a Execução.");
-                }
-                //return e.HttpStatus(e.Message) //BadRequest(e);
-            }
+            return Ok(ContatoBusiness.getContato(numero));
         }
 
         [HttpPut]
         public IActionResult editarContato(int numero, string novoNome)
         {
-            try
-            {
-                return Ok(ContatoBusiness.editarContato(numero, novoNome));
-            }
-            catch (Exception e)
-            {
-                return BadRequest("Ocorreu algum erro durante a Execução.");
-            }
+            return Ok(ContatoBusiness.editarContato(numero, novoNome));
         }
 
         [HttpDelete]
         public IActionResult deletarContato(int numero)
         {
-            try {
-                return Ok(ContatoBusiness.deletarContato(numero));
-            }
-            catch(Exception e)
-            {
-                return BadRequest("Ocorreu algum erro durante a Execução.");
-            }
+            return Ok(ContatoBusiness.deletarContato(numero));
         }
     }
 }

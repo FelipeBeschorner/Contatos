@@ -27,6 +27,12 @@ namespace Contato.Config
     {
         public HttpStatusCode statusCode { get; set; }
         public ErrorDTO error { get; set; }
-        public HttpRequestMessage request { get; set; }
+        //public HttpRequestMessage request { get; set; }
+
+        public ExceptionResponse(HttpStatusCode statusCode, ErrorDTO error)
+        {
+            this.statusCode = statusCode;
+            this.error = error;
+        }
     }
 }

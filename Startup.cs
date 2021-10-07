@@ -3,12 +3,14 @@ using Contato.DTO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,17 +46,16 @@ namespace contato
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseExceptionHandler(c => c.Run(async context =>{
+                var exception = (InternalException) context.Features
+                    .Get<IExceptionHandlerFeature>()
+                    .Error;
 
-            app.UseExceptionHandler(appError =>
-            {
-                appError.Run(async context =>
-                {
-                    var result = context.Features.Get<ExceptionResponse>();
-                    //var result = new ExceptionResponse();
-                    //result.statusCode = (HttpStatusCode)context.Response.StatusCode;
-                    //context.Response.StatusCode = (int)result.statusCode;
-                });
-            });
+                var result = JsonConvert.SerializeObject(new { Title = exception.Header, Message = exception.Message });
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int) exception.HttpStatus;
+                await context.Response.WriteAsync(result);
+            }));
 
             app.UseHttpsRedirection();
 
@@ -66,7 +67,6 @@ namespace contato
             {
                 endpoints.MapControllers();
             });
-
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

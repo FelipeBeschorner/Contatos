@@ -21,6 +21,7 @@ namespace contato
             var FileStream = new FileStream("phonebook.xml", FileMode.Open);
             AddressBook = (AddressBook)serializer.Deserialize(FileStream);
             AddressBook.contacts.ForEach(r => { if (r.FirstName == "") { r.FirstName = r.LastName; r.LastName = null; } });
+            AddressBook.contacts = AddressBook.contacts.OrderBy(r => r.FirstName).ToList();
             FileStream.Close();
 
             CreateHostBuilder(args).Build().Run();
