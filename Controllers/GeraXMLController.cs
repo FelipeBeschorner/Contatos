@@ -1,5 +1,6 @@
 ﻿using contato;
 using Contato.Business;
+using Contato.Config;
 using ContatosApplication;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,11 +24,16 @@ namespace Contato.Models
             return Ok(ContatoBusiness.getXml());
         }
 
-        [HttpGet]
         [Route("Download")]
-        public IActionResult downloadXml()
+        [HttpGet]
+        public IActionResult Download(string tipo)
         {
-            return ContatoBusiness.downloadXml();
+            switch (tipo)
+            {
+                case "xml": return ContatoBusiness.downloadXml();
+                case "csv": return ContatoBusiness.downloadCsv(); ;
+                default : throw new InternalException(System.Net.HttpStatusCode.BadRequest, "Tipo inválido", "Esse tipo não está cadastrado");
+            }
         }
     }
 }
